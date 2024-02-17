@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secure Reporting and Investigation Platform</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: url(./assets/images/reportbg.jpg);
+            background-size: cover;
+        }
+        h1 {
+            color: #ffffff;
+        }
+        p{
+            color: white;
+        }
+        form {
+            background-color: #f9f9f9;
+            color: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            max-width: 550px;
+            margin: auto;
+            background-color: rgba(0, 0, 0, 0.5);;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input,option{
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+        }
+        input{
+            pad: 15px;
+        }
+        .container{
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        select {
+        width: 100%;
+        color: white;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: rgba(0, 0, 0, 0.5);
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        }
+        input[type="text"], textarea {
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        input[type="File"]{
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        textarea{
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        button{
+            background-color: rgba(0, 0, 0, 0.3);
+            color: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+        .detailed-form {
+            display: none;
+        }
+        .quick-form {
+            display: block;
+        }
+    </style>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    
+</head>
+<body>
+    <h1>Report Corruption</h1>
+    <p>Your report is anonymous. We do not track your personal data.</p>
+    <div id="buttons">
+        <button onclick="quickForms()">Login</button>
+        <button onclick="detailedForms()">Register</button>
+    </div>
+    <div>
+    <form action="submit_report.php" method="post" enctype="multipart/form-data" class="detailed-form">
+
+        <label for="report">Describe the incident:</label><br>
+        <textarea id="report" name="report" required style="width: 462px; height: 191px"></textarea><br>
+
+        <label for="Person">Person Involved:</label><br>
+        <input type="text" id="Per  son" name="Person"><br>
+
+        <label for="corruption_type">Type of Corruption:</label><br>
+        <div id="container">
+        <select id="corruption_type" name="corruption_type" onchange="checkOther(this)">
+            <option value="bribery">Bribery</option>
+            <option value="embezzlement">Embezzlement</option>
+            <option value="mof">Misuse of public funds</option>
+            <option value="fraud">fraud</option>
+            <option id="other" value="other">Other</option>
+            <input type="text" id="other_field" name="other_field" placeholder="Please specify" style="display: none;">
+            
+
+        </select><br>
+        </div>
+        <label for="location">Upload a Geotag Image:</label><br>
+        <input type="file" accept="image/*" id="imageInput">
+        <button type="button" onclick="handleImageUpload()">Upload Image</button>
+
+        <label for="evidence">Upload Evidence:</label><br>
+        <input type="file" id="evidence" name="evidence"><br>
+
+        <input type="submit" value="Submit Report">
+    </form>
+    <form action="submit_report.php" method="post" enctype="multipart/form-data" class="quick-form">
+        
+        <label for="location">Upload a Geotag Image:</label><br>
+        <input type="file" accept="image/*" id="imageInput1">
+        <button type="button" onclick="handleImageUpload1()">Upload Image</button>
+
+        <label for="Report">A one line Report about the incident</label><br>
+        <input type="text" id="report" name="report"><br>
+
+        <input type="submit" value="Submit Report">
+    </form>
+</div>
+</body>
+<script>
+    function checkOther(selectObj) {
+    // get the index of the "Other" option
+    var otherIndex = selectObj.options.length - 1;
+    // check if the "Other" option has been selected
+    if (selectObj.selectedIndex == otherIndex) {
+        // unhide the input field
+        document.getElementById("other_field").style.display = "block";
+    } else {
+        // hide the input field
+        document.getElementById("other_field").style.display = "none";
+    }
+}
+
+function handleImageUpload1() {
+        const imageInput = document.getElementById('imageInput1');
+        const file = imageInput.files[0];
+
+        if (!file) {
+            alert('Please select an image.');
+            return;
+        }
+
+        // Read EXIF data from the image
+        EXIF.getData(file, function() {
+            const latitude = EXIF.getTag(this, 'GPSLatitude');
+            const longitude = EXIF.getTag(this, 'GPSLongitude');
+
+            if (latitude && longitude) {
+                console.log(`Geotag: Latitude ${latitude}, Longitude ${longitude}`);
+                // Store the location or perform further actions
+            } else {
+                alert('This image does not have valid geotag information.');
+            }
+        });
+    }
+
+    function handleImageUpload() {
+        const imageInput = document.getElementById('imageInput');
+        const file = imageInput.files[0];
+
+        if (!file) {
+            alert('Please select an image.');
+            return;
+        }
+
+        // Read EXIF data from the image
+        EXIF.getData(file, function() {
+            const latitude = EXIF.getTag(this, 'GPSLatitude');
+            const longitude = EXIF.getTag(this, 'GPSLongitude');
+
+            if (latitude && longitude) {
+                console.log(`Geotag: Latitude ${latitude}, Longitude ${longitude}`);
+                // Store the location or perform further actions
+            } else {
+                alert('This image does not have valid geotag information.');
+            }
+        });
+    }
+
+        function quickForms(){
+            const loginForm = document.querySelector('.quick-form');
+            const registerForm = document.querySelector('.detailed-form');
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none'
+        }
+
+        function detailedForms(){
+            const loginForm = document.querySelector('.quick-form');
+            const registerForm = document.querySelector('.detailed-form');
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block'   
+        }
+    
+</script>
+</html>
