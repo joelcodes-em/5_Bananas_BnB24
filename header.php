@@ -16,9 +16,8 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="chat.html">CHAT</a></li>
-        <li><a href="official_login.php">Official Login  <i class="fa fa-user"></i></a></li>
         <li><a href="investigator.php">Investigator</a></li>
-
+        <li><a href="official_login.php">Official Login  <i class="fa fa-user"></i></a></li>
       </ul>
     </div>
   </div>
