@@ -12,18 +12,18 @@ if(isset($_SESSION['user_id'])){
 
 if(isset($_POST['submit'])){
 
-   $username = $_POST['username'];
-   $username = filter_var($username, FILTER_SANITIZE_STRING);
+   $loginid = $_POST['loginid'];
+   $loginid = filter_var($loginid, FILTER_SANITIZE_STRING);
    $pass = sha1($_POST['pass']);
    $pass = filter_var($pass, FILTER_SANITIZE_STRING);
 
-   $select_user = $conn->prepare("SELECT * FROM `users` WHERE username = ? AND password = ?");
-   $select_user->execute([$username, $pass]);
+   $select_user = $conn->prepare("SELECT * FROM `investi` WHERE loginid = ? AND password = ?");
+   $select_user->execute([$loginid, $pass]);
    $row = $select_user->fetch(PDO::FETCH_ASSOC);
 
    if($select_user->rowCount() > 0){
       $_SESSION['user_id'] = $row['id'];
-      header('location:home.php');
+      header('location:dashboard.php');
    }else{
       $message[] = 'incorrect username or password!';
    }
@@ -114,12 +114,11 @@ a:hover {
 }
 </style>
 
-   <form action="" method="post">
+   <form action="dashboard.php" method="post">
       <h3>Investigator Login </h3>
-      <input type="text" name="username" required placeholder="Username" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="password" name="pass" required placeholder="enter your password" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
+      <input type="text" name="loginid" required placeholder="Login ID" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
+      <input type="text" name="pass" required placeholder="enter your password" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
       <input type="submit" value="login" name="submit" class="btn">
-      <p>don't have an account? <a href="signup.php">register now</a></p>
    </form>
 
 </section>
