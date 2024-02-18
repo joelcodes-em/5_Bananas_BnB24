@@ -134,6 +134,8 @@ a:hover {
       <input type="text" name="username" required placeholder="Username" class="box" maxlength="50">
       <label id="icon" for="name"><i class="fas fa-user"></i></label>
       <input type="text" name="number" required placeholder="enter your number" class="box" min="0" max="9999999999" maxlength="10">
+      <form action="send_otp.php" method="post">
+        <button type="submit">validate</button>
       <label id="icon" for="name"><i class="fas fa-unlock-alt"></i></label>
       <input type="password" name="pass" required placeholder="enter your password" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
       <label id="icon" for="name"><i class="fas fa-unlock-alt"></i></label>
